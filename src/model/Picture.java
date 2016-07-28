@@ -3,12 +3,10 @@ package model;
 import configuration.Configure;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageInputStream;
+import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.MemoryImageSource;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +21,11 @@ public class Picture extends Applet {
     private BufferedImage imageOrig;
     private int imageWidthOrig;
     private int imageHeightOrig;
-    private BufferedImage imageCopy;
+    private BufferedImage imageMini;
     private int imageWidthCopy;
     private int imageHeightCopy;
     private Color[][] colors;
+    private JFrame jFrame;
 
     private Picture() {
     }
@@ -70,6 +69,29 @@ public class Picture extends Applet {
 //        this.colors = mass;
     }
 
+    public void MiniPicture() {
+        setImage();
+        Image img = getImageOrig().getScaledInstance(500, -1, Image.SCALE_REPLICATE);
+
+        BufferedImage bimage = imageToBufferedImage(img);
+
+        //showFoto(img);
+        //showFoto(bimage);
+
+        setImageMini(bimage);
+        Configure configure = Configure.getConfigure();
+        try {
+            ImageIO.write(bimage, "jpg", new File("E:\\Universitet\\11_semestre\\Polska\\FotoDyplom\\web\\images\\mini\\" + configure.getFoto_original_name()));
+            configure.setFoto_copy_name(configure.getFoto_original_name());
+            configure.setFoto_copy_path(configure.getPath_for_copy() + configure.getFoto_original_name());
+            configure.setFoto_copy_width(bimage.getWidth());
+            configure.setFoto_copy_height(bimage.getHeight());
+            configure.setFoto_true(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void CopyPicture() {
         setImage();
         setPixelsColor();
@@ -77,25 +99,74 @@ public class Picture extends Applet {
         int width = getImageWidthOrig();
         int height = getImageHeightOrig();
 
+
+        BufferedImage bufferedImage = newFoto(width, height, color);
+
+
+        setImageMini(bufferedImage);
+        Configure configure = Configure.getConfigure();
+//        try {
+//            ImageIO.write(bufferedImage, "jpg",
+//                    new File("E:\\Universitet\\11_semestre\\Polska\\FotoDyplom\\web\\images\\mini\\"
+//                            + configure.getFoto_original_name()));
+//            configure.setFoto_copy_name(configure.getFoto_original_name());
+//            configure.setFoto_copy_path(configure.getPath_for_copy() + configure.getFoto_original_name());
+//            configure.setFoto_true(true);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public BufferedImage newFoto(int width, int height, Color[][] color) {
+        int wid = 1, hei = 1;
+        //if (width>500){wid=width/500;}
+        //if (height>500){hei=height/500;}
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j = j + wid) {
+            for (int i = 0; i < width; i = i + hei) {
                 bufferedImage.setRGB(i, j, color[i][j].getRGB());
             }
         }
+        Image img = bufferedImage.getScaledInstance(500, 500, 0);
 
-        setImageCopy(bufferedImage);
-        Configure configure = Configure.getConfigure();
-        try {
-            ImageIO.write(bufferedImage, "jpg",
-                    new File("E:\\Universitet\\11_semestre\\Polska\\FotoDyplom\\web\\images\\mini\\"
-                            + configure.getFoto_original_name()));
-            configure.setFoto_copy_name(configure.getFoto_original_name());
-            configure.setFoto_copy_path(configure.getPath_for_copy() + configure.getFoto_original_name());
-            configure.setFoto_true(true);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        BufferedImage bimage = imageToBufferedImage(img);
+
+        showFoto(img);
+        return bimage;
+    }
+
+    public void showFoto(Image bufferedImage) {
+        if (getjFrame() == null) {
+            setjFrame(new JFrame());
         }
+        JFrame frame = getjFrame();
+        //frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Foto");
+        frame.setVisible(true);
+
+
+        JLabel label = new JLabel(new ImageIcon(bufferedImage));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(label);
+        frame.pack();
+        frame.setLocation(200, 200);
+
+//        frame.add(new JLabel(new ImageIcon("E:/Universitet/11_semestre/Polska/FotoDyplom/web/images/mini/Demo.jpg")));
+    }
+
+    public BufferedImage imageToBufferedImage(Image image) {
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        }
+
+//      Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+
+        bimage.getGraphics().drawImage(image, 0, 0, null);
+
+        return bimage;
     }
 
     public static Picture getPicture() {
@@ -150,11 +221,19 @@ public class Picture extends Applet {
         this.imageOrig = imageOrig;
     }
 
-    public BufferedImage getImageCopy() {
-        return imageCopy;
+    public BufferedImage getImageMini() {
+        return imageMini;
     }
 
-    public void setImageCopy(BufferedImage imageCopy) {
-        this.imageCopy = imageCopy;
+    public void setImageMini(BufferedImage imageMini) {
+        this.imageMini = imageMini;
+    }
+
+    public JFrame getjFrame() {
+        return jFrame;
+    }
+
+    public void setjFrame(JFrame jFrame) {
+        this.jFrame = jFrame;
     }
 }

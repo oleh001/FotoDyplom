@@ -6,6 +6,7 @@
 <%@ page import="java.awt.*" %>
 <%@ page import="model.LoadFotoThread" %>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="javax.swing.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -60,33 +61,21 @@ Select a file to upload: <br/>
 
         <%--}--%>
     }
-//    ;
+    //    ;
 
 
 </script>
 
-<%
-    if (configure.isFoto_true()) {
-        int p = configure.getFoto_original_width() > configure.getFoto_max_width_in_window()
-                ? configure.getFoto_max_width_in_window() : configure.getFoto_original_width();
-        out.println(configure.getFoto_original_path());
 
-        out.println("<img src = 'images/" + configure.getFoto_original_name()
-                + "' width='" + p + "px' alt='Your Foto' title='Your Foto'>");
-    } else {
-        //out.println(configure.getFoto_original_path());
-    }
-%>
 
 <%
-
-
     //    if (configure.isFoto_true() && configure.isFoto_colors()) {
     if (configure.isFoto_true()) {
         Picture picture = controller.getPicture();
         //picture.setImage();
         //picture.setPixelsColor();
-        picture.CopyPicture();
+        //picture.CopyPicture();
+        picture.MiniPicture();
 
 //        Color[][] colors = picture.getColors();
 //        int x = picture.getImageWidthOrig();
@@ -100,6 +89,24 @@ Select a file to upload: <br/>
 //        }
 
     }
+%>
+
+<%
+    if (configure.isFoto_true()) {
+//        int p = configure.getFoto_original_width() > configure.getFoto_max_width_in_window()
+//                ? configure.getFoto_max_width_in_window() : configure.getFoto_original_width();
+
+        int p = configure.getFoto_copy_width();
+        int q = configure.getFoto_copy_height();
+
+        out.println(configure.getFoto_original_path());
+
+        out.println("<img src = 'images/mini/" + configure.getFoto_original_name()
+                + "' width='" + p + "px' height='" + q + "px' alt='Your Foto' title='Your Foto'>");
+    } else {
+        //out.println(configure.getFoto_original_path());
+    }
+
 %>
 
 

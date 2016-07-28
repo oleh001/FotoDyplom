@@ -5,8 +5,8 @@ import model.Connection_DB;
 import model.Pages_Select;
 import model.Picture;
 
+import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.sql.ResultSet;
 
 /**
@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 public class Controller {
     public Controller() {
     }
+
     private Configure configure = Configure.getConfigure();
 
     private Connection_DB connection_db = new Connection_DB();
@@ -23,12 +24,12 @@ public class Controller {
     private Pages_Select pages_select = new Pages_Select(connection_db.getDbConnection(), "SELECT page_id, title from pages");
     private ResultSet resultSet = pages_select.getResultSet();
 
-//    private Picture picture = new Picture(getConfigure().getFoto_original_path());
-    private Picture picture=Picture.getPicture();
+    //    private Picture picture = new Picture(getConfigure().getFoto_original_path());
+    private Picture picture = Picture.getPicture();
 
     private Color[][] colors;// = getPicture().getColors();
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        Controller controller=new Controller();
 //        Picture picture=controller.getPicture();
 //
@@ -41,7 +42,11 @@ public class Controller {
 //            }
 //            System.out.println();
 //        }
-//    }
+        JFrame myWindow = new JFrame("Пробное окно");
+        myWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myWindow.setSize(400, 300);
+        myWindow.setVisible(true);
+    }
 
     public Connection_DB getConnection_db() {
         return connection_db;

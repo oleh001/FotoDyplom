@@ -38,6 +38,7 @@ public class Configure {
     private String foto_copy_path;
     private String foto_copy_name;
     private int foto_copy_width;
+    private int foto_copy_height;
 
     //    Description for Shop
     private final String descr_1 = "Your the best shop - Moda";
@@ -171,5 +172,13 @@ public class Configure {
 
     public int getFoto_max_width_in_window() {
         return foto_max_width_in_window;
+    }
+
+    public int getFoto_copy_height() {
+        return foto_copy_height;
+    }
+
+    public void setFoto_copy_height(int foto_copy_height) {
+        this.foto_copy_height = foto_copy_height;
     }
 }
